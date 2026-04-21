@@ -17,74 +17,46 @@ const SECTORS = [
   "유틸리티",
   "부동산",
   "소재",
+  "크립토",
+  "현금",
 ];
 
+const ts = new Date().toISOString();
+const h = (
+  id: string, ticker: string, name: string, market: "KRX" | "NYSE" | "NASDAQ",
+  shares: number, avgPrice: number, sector: string, currentPrice?: number
+): Holding => ({
+  id, portfolioId: "demo", ticker, name, market, shares, avgPrice,
+  sector, currentPrice: currentPrice ?? avgPrice,
+  createdAt: ts, updatedAt: ts,
+});
+
 const INITIAL_HOLDINGS: Holding[] = [
-  {
-    id: "1",
-    portfolioId: "demo",
-    ticker: "AAPL",
-    name: "Apple Inc.",
-    market: "NASDAQ",
-    shares: 50,
-    avgPrice: 178.5,
-    sector: "기술",
-    currentPrice: 195.2,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    portfolioId: "demo",
-    ticker: "MSFT",
-    name: "Microsoft Corp.",
-    market: "NASDAQ",
-    shares: 30,
-    avgPrice: 340.0,
-    sector: "기술",
-    currentPrice: 378.9,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    portfolioId: "demo",
-    ticker: "005930",
-    name: "삼성전자",
-    market: "KRX",
-    shares: 100,
-    avgPrice: 71000,
-    sector: "기술",
-    currentPrice: 74500,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "4",
-    portfolioId: "demo",
-    ticker: "JPM",
-    name: "JPMorgan Chase",
-    market: "NYSE",
-    shares: 20,
-    avgPrice: 155.0,
-    sector: "금융",
-    currentPrice: 198.4,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "5",
-    portfolioId: "demo",
-    ticker: "JNJ",
-    name: "Johnson & Johnson",
-    market: "NYSE",
-    shares: 25,
-    avgPrice: 160.0,
-    sector: "헬스케어",
-    currentPrice: 155.8,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
+  // === 해외 레버리지 ETF ===
+  h("1", "BITM", "비트마인", "NASDAQ", 96, 33143, "크립토", 33143),
+  h("2", "ETHU", "이더리움 2배롱", "NASDAQ", 263, 40175, "크립토", 40175),
+  h("3", "OKLO-2X", "오클로 2배롱", "NASDAQ", 62, 16020, "에너지", 16020),
+  h("4", "HIMS-2X", "힘스앤헐스 2배롱", "NASDAQ", 12, 70832, "헬스케어", 70832),
+  h("5", "MSTU", "스트레티지 2배 롱", "NASDAQ", 35, 11224, "크립토", 11224),
+  h("6", "TSLL", "테슬라 2배 롱", "NASDAQ", 504, 19551, "기술", 19551),
+  h("7", "TSLY", "테슬라 ETF (초커버드콜)", "NASDAQ", 118, 44662, "기술", 44662),
+  // === 국내 개별종목 ===
+  h("8", "000660", "SK하이닉스", "KRX", 5, 1224000, "기술", 1224000),
+  h("9", "005930", "삼성전자", "KRX", 30, 219000, "기술", 219000),
+  h("10", "000250", "삼천당제약", "KRX", 14, 475500, "헬스케어", 475500),
+  // === 국내 ETF ===
+  h("11", "489770", "KODEX 차이나휴머노이드", "KRX", 230, 10391, "기술", 10391),
+  h("12", "464360", "TIGER K방산&우주", "KRX", 60, 49610, "산업재", 49610),
+  h("13", "489250", "KODEX 미국AI광통신네트워크", "KRX", 340, 12853, "통신", 12853),
+  h("14", "480250", "RISE 네트워크인프라", "KRX", 129, 45425, "통신", 45425),
+  h("15", "385590", "KODEX 신재생에너지액티브", "KRX", 93, 50650, "에너지", 50650),
+  h("16", "488600", "ACE K휴머노이드로봇산업TOP2+", "KRX", 315, 11746, "기술", 11746),
+  h("17", "490060", "TIGER 코리아AI전력기기TOP3+", "KRX", 55, 20000, "산업재", 20000),
+  h("18", "480170", "SOL 전고체배터리&실리콘음극재", "KRX", 150, 21333, "에너지", 21333),
+  h("19", "402970", "ACE 미국배당다우존스", "KRX", 15, 14730, "금융", 14730),
+  // === 기타 자산 ===
+  h("20", "BTC", "비트코인", "NASDAQ", 1, 5950000, "크립토", 5950000),
+  h("21", "CASH", "현금 (원화+달러+엔)", "KRX", 1, 19633000, "현금", 19633000),
 ];
 
 const emptyForm: HoldingInput = {
