@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Trash2, PieChart, Info } from "lucide-react";
+import { Plus, Trash2, PieChart, Info, Camera } from "lucide-react";
 import type { Holding, HoldingInput } from "@/types";
 import SectorDonut from "@/components/charts/SectorDonut";
+import ScreenshotImport from "@/components/portfolio/ScreenshotImport";
 
 const SECTORS = [
   "기술",
@@ -99,6 +100,7 @@ export default function PortfolioPage() {
   const [holdings, setHoldings] = useState<Holding[]>(INITIAL_HOLDINGS);
   const [form, setForm] = useState<HoldingInput>(emptyForm);
   const [showForm, setShowForm] = useState(false);
+  const [showScreenshotImport, setShowScreenshotImport] = useState(false);
 
   const totalValue = useMemo(() => {
     return holdings.reduce((sum, h) => {
@@ -157,6 +159,11 @@ export default function PortfolioPage() {
     setHoldings((prev) => prev.filter((h) => h.id !== id));
   };
 
+  const handleScreenshotImport = (imported: Holding[]) => {
+    setHoldings((prev) => [...prev, ...imported]);
+    setShowScreenshotImport(false);
+  };
+
   const formatCurrency = (value: number, market: string) => {
     if (market === "KRX") {
       return new Intl.NumberFormat("ko-KR", {
@@ -173,6 +180,14 @@ export default function PortfolioPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
+      {/* Screenshot Import Modal */}
+      {showScreenshotImport && (
+        <ScreenshotImport
+          onImport={handleScreenshotImport}
+          onClose={() => setShowScreenshotImport(false)}
+        />
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -181,13 +196,22 @@ export default function PortfolioPage() {
             보유 종목을 추가하고 포트폴리오 구성을 확인하세요
           </p>
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-lg transition-colors shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          종목 추가
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowScreenshotImport(true)}
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-5 py-2.5 rounded-lg transition-colors shadow-sm"
+          >
+            <Camera className="w-4 h-4" />
+            스크린샷으로 추가
+          </button>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-lg transition-colors shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            종목 추가
+          </button>
+        </div>
       </div>
 
       {/* Summary cards */}
